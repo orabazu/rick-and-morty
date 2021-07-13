@@ -1,9 +1,11 @@
+const API_URL = "https://rickandmortyapi.com/api";
 class Api {
   async get<T>(url: string, params: any): Promise<T> {
     let response;
     const startTime = new Date().getTime();
+    const queryParams = params ? `?${params}` : ``;
     try {
-      response = await fetch(`url/${params}`);
+      response = await fetch(`${API_URL}/${url}${queryParams}`);
     } catch (e) {
       /* eslint-disable-next-line no-throw-literal */
       throw { status: 0, message: e };

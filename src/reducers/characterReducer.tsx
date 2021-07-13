@@ -1,10 +1,11 @@
 import { CharacterResult } from "../service/CharacterService";
+import { Info } from "../service/types";
 
 export type CharacterState = {
   isLoading: boolean;
   characterList: CharacterResult[];
   characterListError: Error | null;
-  characterTotalCount: number | null;
+  characterInfo: Info | null;
 };
 
 export enum CharacterActionTypes {
@@ -17,8 +18,8 @@ export type CharacterAction =
   | {
       type: CharacterActionTypes.FETCH_SUCCESS;
       payload: {
-        data: CharacterResult[];
-        totalCount: number;
+        results: CharacterResult[];
+        info: Info;
       };
     }
   | { type: CharacterActionTypes.FETCH_FAILURE; payload: Error }
@@ -28,7 +29,7 @@ const initialState: CharacterState = {
   characterList: [],
   characterListError: null,
   isLoading: false,
-  characterTotalCount: null,
+  characterInfo: null,
 };
 
 const reducer = (
@@ -39,14 +40,14 @@ const reducer = (
     case CharacterActionTypes.FETCH_SUCCESS:
       return {
         ...state,
-        characterList: action.payload.data,
-        characterTotalCount: action.payload.totalCount,
+        characterList: action.payload.results,
+        characterInfo: action.payload.info,
       };
     case CharacterActionTypes.FETCH_FAILURE:
       return {
         ...state,
         characterList: [],
-        characterTotalCount: null,
+        characterInfo: null,
         characterListError: action.payload,
       };
     case CharacterActionTypes.SET_ISLOADING:

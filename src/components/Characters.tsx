@@ -1,20 +1,59 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useCharacterContext } from "../contexts/characterContext";
-
+import { CharacterActionTypes } from "../reducers/characterReducer";
+import {
+  characterService,
+  CharactersParameters,
+} from "../service/CharacterService";
+import CharacterCard from "./CharacterCard";
 
 function Characters() {
+  const [characterState, characterDispatch] = useCharacterContext();
 
-  const [characterState] = useCharacterContext();
+  const fetchCharacterList = async (params?: CharactersParameters) => {
+    characterDispatch({
+      type: CharacterActionTypes.SET_ISLOADING,
+      payload: true,
+    });
+
+    const res = await characterService.getCharacters(params).catch((error) => {
+      characterDispatch({
+        type: CharacterActionTypes.FETCH_FAILURE,
+        payload: error,
+      });
+    });
+    if (res) {
+      characterDispatch({
+        type: CharacterActionTypes.FETCH_SUCCESS,
+        payload: res,
+      });
+    }
+
+    characterDispatch({
+      type: CharacterActionTypes.SET_ISLOADING,
+      payload: false,
+    });
+  };
+
+  useEffect(() => {
+    fetchCharacterList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <div className="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex items-center space-x-4">
-      <div className="flex-shrink-0">
-        <img className="h-12 w-12" src="/img/logo.svg" alt="ChitChat Logo" />
-      </div>
-      <div>
-        <div className="text-xl font-medium text-black">{characterState.characterList}</div>
-        <p className="text-gray-500">You have a new message!</p>
-      </div>
+    <div className="grid grid-cols-3 gap-6">
+      {characterState.characterList.map((character) => {
+        return (
+          <CharacterCard
+            image={character.image}
+            name={character.name}
+            species={character.species}
+            location={character.location.name}
+            origin={character.origin.name}
+            episodes={character.episode}
+          />
+        );
+      })}
     </div>
   );
 }

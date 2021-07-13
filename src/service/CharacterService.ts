@@ -1,11 +1,5 @@
 import { api } from "../lib/Api";
-
-export type Info = {
-  count: number;
-  pages: number;
-  next: string;
-  prev: string;
-};
+import { Info } from "./types";
 
 export type CharacterResult = {
   id: number;
@@ -29,7 +23,7 @@ export type CharacterResult = {
 };
 
 export type CharactersParameters = {
-  page: string
+  page?: string
 };
 
 export type CharactersResponse = {
@@ -40,7 +34,7 @@ export type CharactersResponse = {
 
 class CharacterService {
   getCharacters(params?: CharactersParameters): Promise<CharactersResponse> {
-    return api.get<CharactersResponse>("characters", params);
+    return api.get<CharactersResponse>("character", params);
   }
 }
 
