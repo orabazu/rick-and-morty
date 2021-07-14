@@ -103,7 +103,7 @@ function Characters() {
   return (
     <>
       <p className="text-8xl text-center py-6 text-pink-600 font-sunshiney">
-        Rick and Morthy
+        Rick and Morty
       </p>
       <Pagination currentPage={1} onPageChange={onPageChange} />
       <div className="grid grid-cols-1 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4 gap-6 pb-12">
