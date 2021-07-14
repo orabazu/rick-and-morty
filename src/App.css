@@ -1,7 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Sunshiney&family=Yomogi&display=swap');
+
 .App {
-  @apply bg-gradient-to-r from-blue-400 to-purple-500 h-screen overflow-y-auto
-  box-border p-4 border-8
-  border-pink-600;
+  @apply bg-gradient-to-r from-blue-400 via-green-400 to-purple-500 h-screen overflow-y-auto
+  p-4;
 }
 
 #root {

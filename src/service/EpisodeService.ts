@@ -12,15 +12,15 @@ export type EpisodeResult = {
 };
 
 export type EpisodeParameters = {
-  page?: string
 };
 
 export type EpisodeResponse = EpisodeResult;
 
 
 class EpisodeService {
-  getEpisode(params?: EpisodeParameters): Promise<EpisodeResponse> {
-    return api.get<EpisodeResponse>("episode", params);
+  getEpisode(urlParams: string, params?: EpisodeParameters): Promise<EpisodeResponse> {
+    const url = urlParams ? `episode/${urlParams}`: "episode"
+    return api.get<EpisodeResponse>(url, params);
   }
 }
 

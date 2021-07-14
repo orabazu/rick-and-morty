@@ -1,10 +1,9 @@
-import { EpisodeResult} from "../service/EpisodeService";
+import { EpisodeResult } from "../service/EpisodeService";
 
 export type EpisodeState = {
   isLoading: boolean;
-  episodeList: {[k:string]:EpisodeResult};
   episodeListError: Error | null;
-  [k:string]: string | boolean | Error | {[k:string]:EpisodeResult} | null;
+  episodeMap:{[k: string]:EpisodeResult};
 };
 
 export enum EpisodeActionTypes {
@@ -17,34 +16,29 @@ export enum EpisodeActionTypes {
 export type EpisodeAction =
   | {
       type: EpisodeActionTypes.FETCH_SUCCESS;
-      payload: {
-        results: EpisodeResult;
-      };
+      payload: EpisodeResult;
     }
   | { type: EpisodeActionTypes.FETCH_FAILURE; payload: Error }
   | { type: EpisodeActionTypes.SET_ISLOADING; payload: boolean }
   | { type: EpisodeActionTypes.SET_UNIQUE_EPISODE; payload: string };
 
 const initialState: EpisodeState = {
-  episodeList: {},
   episodeListError: null,
   isLoading: false,
+  episodeMap:{}
 };
 
-const reducer = (
-  state: EpisodeState,
-  action: EpisodeAction
-): EpisodeState => {
+const reducer = (state: EpisodeState, action: EpisodeAction): EpisodeState => {
   switch (action.type) {
     case EpisodeActionTypes.FETCH_SUCCESS:
       return {
         ...state,
-        episodeList: {[action.payload.results.id]: {...action.payload.results}},
+        episodeMap: {...state.episodeMap, [action.payload.url]: action.payload},
       };
     case EpisodeActionTypes.FETCH_FAILURE:
       return {
         ...state,
-        episodeList: {},
+        episodeMap:{},
         episodeListError: action.payload,
       };
     case EpisodeActionTypes.SET_ISLOADING:
@@ -52,11 +46,11 @@ const reducer = (
         ...state,
         isLoading: action.payload,
       };
-    case EpisodeActionTypes.SET_UNIQUE_EPISODE:
-      return {
-        ...state,
-        [action.payload]: action.payload,
-      };
+    // case EpisodeActionTypes.SET_UNIQUE_EPISODE:
+    //   return {
+    //     ...state,
+    //     [action.payload]: action.payload,
+    //   };
     default:
       return state;
   }

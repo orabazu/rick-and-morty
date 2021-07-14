@@ -1,25 +1,19 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useEpisodeContext } from "../contexts/episodeContext";
-import { EpisodeActionTypes } from "../reducers/episodeReducer";
 
 type Props = {
   episode: string;
 };
 
 const CharacterCardEpisodes: React.FC<Props> = ({ episode }) => {
-  const [episodeState, episodeDispatch] = useEpisodeContext()
-  useEffect(()=>{
-    if(!episodeState[episode]){
-      console.log('notFound', episode)
-      episodeDispatch({
-        type: EpisodeActionTypes.SET_UNIQUE_EPISODE,
-        payload: episode,
-      });
-    }
-  }, [episode])
+  const [episodeState] = useEpisodeContext();
+
   return (
-    <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-      #{episode}
+    <span
+      className="inline-block bg-gray-200 rounded-full 
+    px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 whitespace-nowrap font-yomogi"
+    >
+      {episodeState.episodeMap[episode]?.name}
     </span>
   );
 };

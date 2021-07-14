@@ -1,5 +1,6 @@
 import React from "react";
 import { CharacterContextProvider } from "./contexts/characterContext";
+import { EpisodeContextProvider } from "./contexts/episodeContext";
 import Characters from "./components/Characters";
 
 import "./App.css";
@@ -9,7 +10,9 @@ function App() {
   return (
     <div className="App">
       <CharacterContextProvider>
-        <Characters />
+        <EpisodeContextProvider>
+          <Characters />
+        </EpisodeContextProvider>
       </CharacterContextProvider>
     </div>
   );

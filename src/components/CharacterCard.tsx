@@ -1,5 +1,4 @@
 import React from "react";
-import { EpisodeContextProvider } from "../contexts/episodeContext";
 import CharacterCardEpisodes from "./CharacterCardEpisodes";
 
 type Props = {
@@ -20,23 +19,24 @@ const CharacterCard: React.FC<Props> = ({
   episodes,
 }) => {
   return (
-    <div className="max-w-sm rounded overflow-hidden shadow-lg bg-green-200">
-      <img className="w-full" src={image} alt="Mountain" />
+    <div className="max-w-sm rounded overflow-hidden shadow-2xl bg-gray-50">
+      <img className="w-full" src={image} alt="Char" />
       <div className="px-6 py-4">
-        <div className="font-bold text-xl mb-2">
+        <div className="font-bold text-3xl mb-2 font-sunshiney">
           {name} ({species})
         </div>
-        <p className="text-gray-700 text-base">
-          {location} {origin}
+        <p className="text-gray-700 text-base font-yomogi">
+          <span className="font-semibold ">Location:</span> {location} 
+        </p>
+        <p className="text-gray-700 text-base font-yomogi">
+        <span className="font-semibold ">Origin:</span> {origin}
         </p>
       </div>
-      <div className="text-base	px-6 ">Episodes</div>
-      <div className="px-6 pt-4 pb-2 overflow-x-scroll flex flex-row">
-        <EpisodeContextProvider>
-          {episodes.map((e) => (
-            <CharacterCardEpisodes episode={e} />
-          ))}
-        </EpisodeContextProvider>
+      <div className="text-base	px-6 font-sunshiney">Episodes</div>
+      <div className="px-6 pt-4 pb-2 overflow-x-auto flex flex-row">
+        {episodes.map((e) => (
+          <CharacterCardEpisodes key={e} episode={e} />
+        ))}
       </div>
     </div>
   );
