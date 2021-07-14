@@ -80,6 +80,7 @@ function Characters() {
         fetchEpisode(key as string);
       }
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [characterState.characterList]);
 
   const onPageChange = (direction: Direction) => {
