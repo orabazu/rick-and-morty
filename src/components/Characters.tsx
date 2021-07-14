@@ -3,17 +3,14 @@ import { useCharacterContext } from "../contexts/characterContext";
 import { useEpisodeContext } from "../contexts/episodeContext";
 import { CharacterActionTypes } from "../reducers/characterReducer";
 import { EpisodeActionTypes } from "../reducers/episodeReducer";
-import {
-  characterService,
-  CharactersParameters,
-} from "../service/CharacterService";
+import { characterService } from "../service/CharacterService";
 import { EpisodeParameters, episodeService } from "../service/EpisodeService";
 import CharacterCard from "./CharacterCard";
-import Pagination from "./Pagination";
+import Pagination, { Direction } from "./Pagination";
 
 function Characters() {
   const [characterState, characterDispatch] = useCharacterContext();
-  const [, episodeDispatch] = useEpisodeContext();
+  const [episodeState, episodeDispatch] = useEpisodeContext();
 
   const fetchEpisode = async (id: string, params?: EpisodeParameters) => {
     episodeDispatch({
@@ -40,7 +37,7 @@ function Characters() {
     });
   };
 
-  const fetchCharacterList = async (params?: CharactersParameters) => {
+  const fetchCharacterList = async (params?: string) => {
     characterDispatch({
       type: CharacterActionTypes.SET_ISLOADING,
       payload: true,
@@ -53,10 +50,9 @@ function Characters() {
       });
     });
     if (res) {
-      let pagination = Array.from(Array(res.info.pages).keys())
       characterDispatch({
         type: CharacterActionTypes.FETCH_SUCCESS,
-        payload: {...res, pagination}
+        payload: res,
       });
     }
 
@@ -73,41 +69,63 @@ function Characters() {
 
   useEffect(() => {
     const episodeSet = new Map();
+
     characterState.characterList.forEach((c) => {
       c.episode.forEach((e) => {
         episodeSet.set(e.split("/").pop(), e);
       });
     });
     episodeSet.forEach((e, key) => {
-      fetchEpisode(key as string);
+      if (!episodeState.episodeMap[e]) {
+        fetchEpisode(key as string);
+      }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [characterState.characterList]);
 
-  const onPageChange = () => {
-    console.log("213213");
+  const onPageChange = (direction: Direction) => {
+    let page;
+    if (direction === Direction.LEFT && characterState.characterInfo?.prev) {
+      page = characterState.characterInfo?.prev.split("page=")[1];
+    } else if (
+      direction === Direction.RIGHT &&
+      characterState.characterInfo?.next
+    ) {
+      page = characterState.characterInfo?.next.split("page=")[1];
+    } else if (
+      (direction === Direction.LEFT && !characterState.characterInfo?.prev) ||
+      (direction === Direction.RIGHT && !characterState.characterInfo?.next)
+    ) {
+      return
+    }
+      fetchCharacterList(`page=${page}`);
   };
 
   return (
     <>
-      <p className="text-8xl text-center py-6 text-pink-600 font-sunshiney">Rick and Morthy</p>
+      <p className="text-8xl text-center py-6 text-pink-600 font-sunshiney">
+        Rick and Morthy
+      </p>
       <Pagination currentPage={1} onPageChange={onPageChange} />
       <div className="grid grid-cols-1 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4 gap-6 pb-12">
-        {characterState.isLoading
-          ? <p className="text-4xl text-center py-6 text-pink-600 font-sunshiney">Loading ...</p>
-          : characterState.characterList.map((character) => {
-              return (
-                <CharacterCard
-                  key={character.id}
-                  image={character.image}
-                  name={character.name}
-                  species={character.species}
-                  location={character.location.name}
-                  origin={character.origin.name}
-                  episodes={character.episode}
-                />
-              );
-            })}
+        {characterState.isLoading ? (
+          <p className="text-4xl text-center py-6 text-pink-600 font-sunshiney">
+            Loading ...
+          </p>
+        ) : (
+          characterState.characterList.map((character) => {
+            return (
+              <CharacterCard
+                key={character.id}
+                image={character.image}
+                name={character.name}
+                species={character.species}
+                location={character.location.name}
+                origin={character.origin.name}
+                episodes={character.episode}
+              />
+            );
+          })
+        )}
       </div>
     </>
   );

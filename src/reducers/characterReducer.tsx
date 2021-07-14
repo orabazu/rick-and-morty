@@ -6,7 +6,6 @@ export type CharacterState = {
   characterList: CharacterResult[];
   characterListError: Error | null;
   characterInfo: Info | null;
-  pagination: number[]
 };
 
 export enum CharacterActionTypes {
@@ -21,7 +20,6 @@ export type CharacterAction =
       payload: {
         results: CharacterResult[];
         info: Info;
-        pagination: number[]
       };
     }
   | { type: CharacterActionTypes.FETCH_FAILURE; payload: Error }
@@ -32,7 +30,6 @@ const initialState: CharacterState = {
   characterListError: null,
   isLoading: false,
   characterInfo: null,
-  pagination: []
 };
 
 const reducer = (
@@ -45,7 +42,6 @@ const reducer = (
         ...state,
         characterList: action.payload.results,
         characterInfo: action.payload.info,
-        pagination: action.payload.pagination,
       };
     case CharacterActionTypes.FETCH_FAILURE:
       return {

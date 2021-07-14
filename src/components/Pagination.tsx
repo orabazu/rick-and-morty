@@ -1,25 +1,38 @@
-import React, { useEffect } from "react";
+import React from "react";
+import RightArrow from "../assets/right-arrow.svg";
+import LeftArrow from "../assets/left-arrow.svg";
 import { useCharacterContext } from "../contexts/characterContext";
-import RightArrow from '../assets/right-arrow.svg'
-import LeftArrow from '../assets/left-arrow.svg'
+
+export enum Direction {
+  LEFT,
+  RIGHT,
+}
 
 export type Props = {
   currentPage: number;
-  onPageChange: () => void;
+  onPageChange: (s: Direction) => void;
 };
 
-const Pagination: React.FC<Props> = ({ currentPage, onPageChange }) => {
+const Pagination: React.FC<Props> = ({ onPageChange }) => {
   const [characterState] = useCharacterContext();
 
+  const disable = characterState.isLoading ? "pointer-events-none" : "";
   return (
     <div className="h-8 font-medium">
-      <div className="flex fixed right-0 bottom-0 top-0 
-      bg-gradient-to-r from-transparent to-pink-500 w-24 cursor-pointer">
-        <img src={RightArrow} alt="Arrow"/>
+      <div
+        className={`flex fixed left-0 bottom-0 top-0 
+      bg-gradient-to-l from-transparent to-pink-500 w-24 cursor-pointer ${disable}`}
+        onClick={() => onPageChange(Direction.LEFT)}
+      >
+        <img src={LeftArrow} alt="Arrow" />
       </div>
-      <div className="flex fixed left-0 bottom-0 top-0 
-      bg-gradient-to-l from-transparent to-pink-500 w-24 cursor-pointer">
-        <img src={LeftArrow} alt="Arrow"/>
+
+      <div
+        className={`flex fixed right-0 bottom-0 top-0 
+      bg-gradient-to-r from-transparent to-pink-500 w-24 cursor-pointer ${disable}`}
+        onClick={() => onPageChange(Direction.RIGHT)}
+      >
+        <img src={RightArrow} alt="Arrow" />
       </div>
     </div>
   );

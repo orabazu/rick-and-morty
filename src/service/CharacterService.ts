@@ -33,7 +33,7 @@ export type CharactersResponse = {
 
 
 class CharacterService {
-  getCharacters(params?: CharactersParameters): Promise<CharactersResponse> {
+  getCharacters(params?: string): Promise<CharactersResponse> {
     return api.get<CharactersResponse>("character", params);
   }
 }
