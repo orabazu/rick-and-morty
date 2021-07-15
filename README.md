@@ -1,5 +1,7 @@
 # Rick and Morty app
 
+Live on: https://adoring-ramanujan-39bf0f.netlify.app/
+
 This project was bootstrapped with [Craco](https://github.com/gsoft-inc/craco).
 
 ## What's inside
